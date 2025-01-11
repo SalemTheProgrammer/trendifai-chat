@@ -29,7 +29,7 @@ export function Contact() {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-br from-blue-50 to-purple-50">
+    <section className="py-24 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -38,15 +38,15 @@ export function Contact() {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl font-bold text-gray-900 mb-4">
-            Get in Touch
+          <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Contactez-Nous
           </h2>
-          <p className="text-xl text-gray-600">
-            Ready to transform your business? Let's talk about your needs.
+          <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            Prêt à transformer votre entreprise avec l&apos;IA ? Parlons de vos objectifs.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid md:grid-cols-2 gap-12">
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -57,15 +57,15 @@ export function Contact() {
               <div>
                 <label
                   htmlFor="name"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-gray-300 mb-1"
                 >
-                  Name
+                  Nom
                 </label>
                 <input
                   {...register("name")}
                   type="text"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="Your name"
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white"
+                  placeholder="Votre nom"
                 />
                 {errors.name && (
                   <p className="mt-1 text-sm text-red-600">
@@ -77,14 +77,14 @@ export function Contact() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-gray-300 mb-1"
                 >
                   Email
                 </label>
                 <input
                   {...register("email")}
                   type="email"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white"
                   placeholder="your@email.com"
                 />
                 {errors.email && (
@@ -97,15 +97,15 @@ export function Contact() {
               <div>
                 <label
                   htmlFor="message"
-                  className="block text-sm font-medium text-gray-700 mb-1"
+                  className="block text-sm font-medium text-gray-300 mb-1"
                 >
                   Message
                 </label>
                 <textarea
                   {...register("message")}
                   rows={4}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="How can we help you?"
+                  className="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-white"
+                  placeholder="Comment pouvons-nous vous aider ?"
                 />
                 {errors.message && (
                   <p className="mt-1 text-sm text-red-600">
@@ -118,7 +118,7 @@ export function Contact() {
                 type="submit"
                 className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-md hover:shadow-lg transition-all flex items-center justify-center space-x-2"
               >
-                <span>Send Message</span>
+                <span>Envoyer Message</span>
                 <Send className="w-4 h-4" />
               </button>
             </form>

@@ -1,98 +1,95 @@
 "use client";
 
-import { Mail, Phone, Linkedin, Twitter, Instagram } from "lucide-react";
-import Link from "next/link";
 import { motion } from "framer-motion";
+import { Facebook, Twitter, Linkedin, Instagram, Mail, MapPin, Phone } from "lucide-react";
 
 export function Footer() {
   return (
-    <footer className="relative bg-gradient-to-b from-[#0A051E] to-black">
-      {/* Pink Glow Line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-pink-500/50 to-transparent" />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Row 1: Tagline */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12"
-        >
-          <h2 className="text-2xl md:text-3xl font-bold text-white">
-            Transforming Businesses with Intelligent
-            <br />
-            Automation and AI Solutions
-          </h2>
-        </motion.div>
-
-        {/* Row 2: Contact Information and Social Media */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="flex flex-col md:flex-row items-center justify-between"
-        >
-          {/* Contact Information */}
-          <div className="flex flex-col space-y-4 items-center md:items-start mb-8 md:mb-0">
-            {/* Email */}
-            <Link
-              href="mailto:info@aiautomationagency.xyz"
-              className="flex items-center space-x-3 text-gray-400 hover:text-white transition-colors duration-200 group"
-            >
-              <div className="p-2 rounded-full bg-white/5 group-hover:bg-white/10 transition-colors duration-200">
-                <Mail className="w-5 h-5" />
-              </div>
-              <span>info@aiautomationagency.xyz</span>
-            </Link>
-
-            {/* Phone */}
-            <Link
-              href="tel:02080586160"
-              className="flex items-center space-x-3 text-gray-400 hover:text-white transition-colors duration-200 group"
-            >
-              <div className="p-2 rounded-full bg-white/5 group-hover:bg-white/10 transition-colors duration-200">
-                <Phone className="w-5 h-5" />
-              </div>
-              <span>020 8058 6160</span>
-            </Link>
+    <footer className="py-12 relative">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+          {/* Company Info */}
+          <div>
+            <h3 className="text-xl font-bold text-blue-200 mb-4">Agentia</h3>
+            <p className="text-blue-400/80 mb-4">
+              Solutions d&apos;Intelligence Artificielle pour l&apos;Entreprise de Demain
+            </p>
+            <div className="flex space-x-4">
+              {[Facebook, Twitter, Linkedin, Instagram].map((Icon, index) => (
+                <button
+                  key={index}
+                  className="w-8 h-8 rounded-lg bg-blue-950/50 flex items-center justify-center 
+                    hover:bg-gradient-to-r from-blue-600 to-blue-700 transition-all duration-200"
+                >
+                  <Icon className="w-4 h-4 text-blue-400" />
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* Social Media Icons */}
-          <div className="flex space-x-6">
-            {[
-              { icon: Linkedin, href: "#", label: "LinkedIn" },
-              { icon: Twitter, href: "#", label: "Twitter" },
-              { icon: Instagram, href: "#", label: "Instagram" }
-            ].map((social) => (
-              <Link
-                key={social.label}
-                href={social.href}
-                className="group relative"
-                aria-label={social.label}
+          {/* Quick Links */}
+          <div>
+            <h3 className="text-xl font-bold text-blue-200 mb-4">Liens Rapides</h3>
+            <ul className="space-y-2">
+              {['Solutions', 'Services', 'À Propos', 'Contact'].map((item) => (
+                <li key={item}>
+                  <button className="text-blue-400/80 hover:text-blue-400">
+                    {item}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <h3 className="text-xl font-bold text-blue-200 mb-4">Contact</h3>
+            <ul className="space-y-3">
+              {[
+                { icon: Mail, text: 'contact@agentia.ai' },
+                { icon: Phone, text: '+33 1 23 45 67 89' },
+                { icon: MapPin, text: 'Paris, France' }
+              ].map((item, index) => (
+                <li key={index} className="flex items-center space-x-2">
+                  <item.icon className="w-4 h-4 text-blue-400" />
+                  <span className="text-blue-400/80">{item.text}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Newsletter */}
+          <div>
+            <h3 className="text-xl font-bold text-blue-200 mb-4">Newsletter</h3>
+            <p className="text-blue-400/80 mb-4">
+              Restez informé des dernières innovations en IA
+            </p>
+            <form className="space-y-2" onSubmit={(e) => e.preventDefault()}>
+              <input
+                type="email"
+                placeholder="Votre email"
+                className="w-full px-4 py-2 rounded-lg border border-blue-500/20 bg-blue-950/20 
+                  backdrop-blur-xl text-blue-200 placeholder-blue-400/50 focus:outline-none 
+                  focus:border-blue-500/50"
+              />
+              <button
+                type="submit"
+                className="w-full px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 
+                  text-white rounded-lg hover:shadow-lg hover:shadow-blue-500/30 
+                  transition-all duration-200"
               >
-                <div className="absolute -inset-2 rounded-full bg-gradient-to-r from-purple-600/20 to-pink-600/20 opacity-0 group-hover:opacity-100 blur-md transition-opacity duration-200" />
-                <div className="relative p-2 rounded-full bg-white/5 group-hover:bg-white/10 transition-colors duration-200">
-                  <social.icon className="w-5 h-5 text-gray-400 group-hover:text-white transition-colors duration-200" />
-                </div>
-              </Link>
-            ))}
+                S&apos;abonner
+              </button>
+            </form>
           </div>
-        </motion.div>
+        </div>
 
         {/* Copyright */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          className="mt-16 pt-8 border-t border-white/10 text-center"
-        >
-          <p className="text-sm text-gray-500">
-            © {new Date().getFullYear()} AI Automation Agency. All rights reserved.
+        <div className="pt-8 border-t border-blue-500/20 text-center">
+          <p className="text-blue-400/80">
+            © {new Date().getFullYear()} Agentia. Tous droits réservés.
           </p>
-        </motion.div>
+        </div>
       </div>
     </footer>
   );
