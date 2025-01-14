@@ -2,42 +2,58 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Star animations */
 @keyframes twinkle {
-  0%, 100% { opacity: 0.3; }
-  50% { opacity: 1; }
+  0%, 100% { opacity: 0.3; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.1); }
 }
 
-@keyframes pulse {
-  0%, 100% { transform: scale(1); opacity: 0.2; }
-  50% { transform: scale(1.2); opacity: 0.3; }
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
 }
 
-@keyframes shoot {
-  0% {
-    transform: translateX(0) translateY(0) rotate(-45deg);
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(1000px) translateY(1000px) rotate(-45deg);
-    opacity: 0;
-  }
+@keyframes blackHoleAttraction {
+  0% { transform: scale(1) rotate(0deg); }
+  100% { transform: scale(0) rotate(360deg); }
 }
 
-.shooting-star {
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient 15s ease infinite;
+}
+
+.star {
   position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  transition: all 0.3s ease-out;
+}
+
+.star-small {
+  width: 1px;
+  height: 1px;
+}
+
+.star-medium {
   width: 2px;
   height: 2px;
-  background: linear-gradient(90deg, rgba(255,255,255,1), transparent);
-  animation: shoot 5s linear infinite;
 }
 
-.shooting-star::before {
-  content: '';
-  position: absolute;
-  width: 100px;
-  height: 1px;
-  background: linear-gradient(90deg, rgba(255,255,255,0.1), transparent);
-  transform-origin: left;
+.star-large {
+  width: 3px;
+  height: 3px;
+  box-shadow: 0 0 4px currentColor;
+}
+
+.black-hole-active .star {
+  animation: blackHoleAttraction 1.5s ease-in-out forwards;
 }
 
 /* Smooth scrolling */
@@ -62,4 +78,263 @@ html {
 /* Base styles */
 body {
   @apply bg-black text-white;
+}
+
+/* Mars animations */
+@keyframes tentacle {
+  0%    { transform: rotate(-30deg); }
+  75%   { transform: rotate(-30deg); }
+  80%   { transform: rotate(-165deg) translate(6px, 8px); }
+  82.5% { transform: rotate(-165deg) translate(28px, -17px); }
+  100%  { transform: rotate(-165deg) translate(35px, -22px); }
+}
+
+@keyframes ship {
+  0% {
+    right: -10%;
+    top: -10%;
+    margin-top: -55px;
+    margin-right: -55px;
+  }
+  40% {
+    right: 50%;
+    top: 50%;
+  }
+  79.5% {    
+    margin-top: -55px;
+    margin-right: -55px;
+  }
+  84% {
+    margin-top: -20px;
+    margin-right: 0px;
+  }
+  100% {
+    right: 50%;
+    top: 50%;
+    margin-top: 0px;
+    margin-right: 0px;
+  }
+}
+
+@keyframes ship-rotate {
+  0%   { transform: rotate(-110deg); }
+  20%  { transform: rotate(-110deg); }
+  34%  { transform: rotate(47deg); }  
+  79%  { transform: rotate(47deg); } 
+  100% { transform: rotate(47deg); }
+}
+
+@keyframes planet-bump {
+  0%    { margin-left: 0; }
+  39%   { margin-left: 0; }
+  40%   { margin-left: -1px; }
+  40.5% { margin-left: 1px; }
+  41%   { margin-left: 0; }
+  100%  { margin-left: 0; }
+}
+
+.mars-scene {
+  @apply fixed right-[10%] z-0 pointer-events-none hidden lg:block;
+}
+
+.mars-planet {
+  @apply relative w-[300px] h-[300px] rounded-full overflow-hidden;
+  box-shadow: 0 0 100px rgba(220,38,38,0.3);
+}
+
+.mars-surface {
+  @apply absolute inset-0;
+  background: linear-gradient(to bottom right, #ff5f40, #ff4040);
+}
+
+.mars-crater {
+  @apply absolute rounded-full bg-black/20;
+  box-shadow: inset 3px 3px 0 rgba(0,0,0,0.2);
+}
+
+.mars-ship {
+  @apply absolute;
+  animation: ship 12s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
+}
+
+.mars-ship-rotate {
+  @apply absolute;
+  animation: ship-rotate 12s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
+}
+
+/* Mars Planet styles */
+.space {
+  @apply w-full h-full flex items-center justify-center relative;
+}
+
+.planet {
+  @apply relative;
+  transform: rotate3d(0, 0, 1, -25deg) scale3d(.23, .23, 1);
+  transition: transform 1s ease;
+  border-radius: 100%;
+  width: 1500px;
+  height: 1500px;
+}
+
+.planet:after {
+  content: '';
+  width: 1500px;
+  height: 1500px;
+  position: absolute;
+  border-radius: 100%;
+  top: 0;
+  left: 0;
+  box-shadow: 
+    inset 25px 40px 100px 0px rgba(255, 255, 255, .45),
+    -50px -50px 150px 0px rgba(225, 69, 38, 0.35),
+    -25px -55px 150px 0px rgba(226, 108, 66, 0.2),
+    0 0 150px 100px rgba(58, 2, 0, .4);
+}
+
+.planet:before {
+  content: '';
+  width: 1500px;
+  height: 1500px;
+  position: absolute;
+  border-radius: 100%;
+  background: #E26C42;
+  mix-blend-mode: overlay;
+  opacity: .35;
+  z-index: 100;
+}
+
+.mars {
+  width: 1500px;
+  height: 1500px;
+  border-radius: 100%;
+  position: relative;
+  overflow: hidden;
+  clip-path: content-box;
+  background-image: 
+    radial-gradient(
+      circle farthest-side at 0% 0%,
+      rgba(255, 255, 255, .25) 0%,
+      rgba(0, 0, 0, .35) 100%
+    ),
+    radial-gradient(
+      circle farthest-side at 0% 0%,
+      rgba(255, 189, 157, 1) 25%,
+      transparent 80%
+    ),
+    radial-gradient(
+      circle farthest-side at 0% 0%,
+      rgba(218, 32, 13, 1) 0%,
+      transparent 100%
+    ),
+    radial-gradient(
+      circle farthest-side at 50% 0%,
+      rgba(240, 87, 72, 1) 0%,
+      rgba(39, 3, 0, 1) 85%
+    );
+}
+
+.mars .img-map {
+  width: 6000px;
+  height: 1500px;
+  position: absolute;
+  mix-blend-mode: soft-light;
+  opacity: .4;
+  background: url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/mars-bg-min.jpg') 0% 0% / auto 100% repeat-x;
+  animation: rotate 20s linear infinite;
+}
+
+.space:active .planet {
+  transform: rotate3d(0, 0, 1, -25deg) scale3d(.5, .5, 1);
+  transition: transform 1s ease;
+}
+
+.space:active .img-map {
+  animation-play-state: paused;
+}
+
+@keyframes rotate {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Meteor Shower */
+@keyframes meteor {
+  0% {
+    opacity: 1;
+    margin-top: -300px;
+    margin-right: -300px;
+  }
+  12% {
+    opacity: 0;
+  }
+  15% {
+    margin-top: 300px;
+    margin-left: -600px;
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Generate meteor classes */
+.meteor-1 { --meteor-left: 10%; --meteor-top: -100px; --meteor-duration: 4s; }
+.meteor-2 { --meteor-left: 20%; --meteor-top: -150px; --meteor-duration: 6s; }
+.meteor-3 { --meteor-left: 30%; --meteor-top: -200px; --meteor-duration: 5s; }
+.meteor-4 { --meteor-left: 40%; --meteor-top: -120px; --meteor-duration: 7s; }
+.meteor-5 { --meteor-left: 50%; --meteor-top: -180px; --meteor-duration: 4s; }
+.meteor-6 { --meteor-left: 60%; --meteor-top: -250px; --meteor-duration: 6s; }
+.meteor-7 { --meteor-left: 70%; --meteor-top: -150px; --meteor-duration: 5s; }
+.meteor-8 { --meteor-left: 80%; --meteor-top: -220px; --meteor-duration: 7s; }
+.meteor-9 { --meteor-left: 90%; --meteor-top: -180px; --meteor-duration: 4s; }
+.meteor-10 { --meteor-left: 25%; --meteor-top: -200px; --meteor-duration: 6s; }
+.meteor-11 { --meteor-left: 35%; --meteor-top: -150px; --meteor-duration: 5s; }
+.meteor-12 { --meteor-left: 45%; --meteor-top: -180px; --meteor-duration: 7s; }
+.meteor-13 { --meteor-left: 55%; --meteor-top: -220px; --meteor-duration: 4s; }
+.meteor-14 { --meteor-left: 65%; --meteor-top: -150px; --meteor-duration: 6s; }
+.meteor-15 { --meteor-left: 75%; --meteor-top: -180px; --meteor-duration: 5s; }
+
+[class^="meteor-"] {
+  position: fixed;
+  top: var(--meteor-top);
+  left: var(--meteor-left);
+  width: 300px;
+  height: 1px;
+  transform: rotate(-45deg);
+  background-image: linear-gradient(to right, #fff, rgba(255,255,255,0));
+  animation: meteor var(--meteor-duration) linear infinite;
+  animation-delay: calc(var(--meteor-duration) * -1);
+}
+
+[class^="meteor-"]:before {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 5px;
+  border-radius: 50%;
+  margin-top: -2px;
+  background: rgba(255,255,255,0.7);
+  box-shadow: 0 0 15px 3px #fff;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(59, 130, 246, 0.5) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(59, 130, 246, 0.5);
+  border-radius: 20px;
 }

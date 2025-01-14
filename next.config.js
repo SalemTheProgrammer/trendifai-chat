@@ -1,10 +1,36 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: { unoptimized: true },
-  webpack: (config) => {
-    config.resolve.preferRelative = true
-    return config
-  }
-};
+  reactStrictMode: true,
+  images: {
+    domains: ['your-domain.com'],
+    unoptimized: false,
+  },
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['framer-motion', '@heroicons/react'],
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+  webpack: (config, { dev, isServer }) => {
+    // Optimize bundle size
+    config.optimization = {
+      ...config.optimization,
+      splitChunks: {
+        chunks: 'all',
+        minSize: 20000,
+        maxSize: 70000,
+        cacheGroups: {
+          commons: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+          },
+        },
+      },
+    };
+    return config;
+  },
+}
 
 module.exports = nextConfig;
