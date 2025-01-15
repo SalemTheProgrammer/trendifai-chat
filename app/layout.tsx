@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AuthProvider } from '@/providers/AuthProvider';
 
 export const metadata: Metadata = {
   title: "Agentia - Solutions IA Intelligentes",
@@ -20,7 +21,9 @@ export default function RootLayout({
         />
       </head>
       <body className="font-sans smooth-scroll">
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

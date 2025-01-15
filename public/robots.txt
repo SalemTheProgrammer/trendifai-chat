@@ -1,4 +1,19 @@
 User-agent: *
 Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
 
+# Crawl-delay: 10
+
+# Allow search engines to access JS and CSS files
+Allow: /*.js$
+Allow: /*.css$
+
+# Block specific file types
+Disallow: /*.json$
+Disallow: /*.xml$
+Disallow: /*.txt$
+
+# Sitemaps
 Sitemap: https://aiautomationagency.com/sitemap.xml 

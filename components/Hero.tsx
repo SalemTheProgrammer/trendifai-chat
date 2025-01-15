@@ -5,12 +5,12 @@ import { Bot, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
-import { DemoModal } from "./DemoModal";
+import { ChatModal } from "./ChatModal";
 
 
 export default function AgentiaHero() {
   const router = useRouter();
-  const [showDemo, setShowDemo] = useState(false);
+  const [showChat, setShowChat] = useState(false);
   const [text, setText] = useState("");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const fullText = "Transformez votre entreprise grâce à nos solutions d'IA sur mesure. De l'automatisation à l'analyse prédictive, innovez avec Agentia.";
@@ -99,7 +99,7 @@ export default function AgentiaHero() {
               className="flex flex-col sm:flex-row gap-4 justify-center mt-8 sm:mt-10"
             >
               <button
-                onClick={handleDemoClick}
+                onClick={() => setShowChat(true)}
                 className="w-full sm:w-auto group relative px-6 sm:px-8 py-3 sm:py-4 
                   bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl overflow-hidden
                   hover:shadow-lg hover:shadow-blue-500/30 active:scale-95 transition-all duration-200"
@@ -109,7 +109,7 @@ export default function AgentiaHero() {
                 <span className="relative flex items-center justify-center gap-2 text-base 
                   sm:text-lg font-medium text-white group-hover:text-white/90">
                   <Bot className="w-5 h-5" />
-                  {isAuthenticated ? 'Accéder au Dashboard' : 'Commencer Maintenant'}
+                  Parler avec notre assistant
                 </span>
               </button>
             </motion.div>
@@ -141,7 +141,7 @@ export default function AgentiaHero() {
         </div>
       </section>
 
-      {showDemo && <DemoModal onClose={() => setShowDemo(false)} isOpen={false} />}
+      <ChatModal isOpen={showChat} onClose={() => setShowChat(false)} />
     </>
   );
 }

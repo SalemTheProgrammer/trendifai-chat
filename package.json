@@ -13,6 +13,9 @@
     "@hookform/resolvers": "^3.3.4",
     "@langchain/core": "^0.3.30",
     "@langchain/openai": "^0.3.17",
+    "@livekit/agents": "^0.6.1",
+    "@livekit/agents-plugin-openai": "^0.8.0",
+    "@livekit/rtc-node": "^0.13.1",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
@@ -42,7 +45,7 @@
     "@sendinblue/client": "^3.3.1",
     "@studio-freight/lenis": "^1.0.42",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
-    "@supabase/supabase-js": "^2.39.7",
+    "@supabase/supabase-js": "^2.47.14",
     "axios": "^1.6.7",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
@@ -52,10 +55,12 @@
     "embla-carousel-react": "^8.0.0",
     "framer-motion": "^11.0.8",
     "input-otp": "^1.1.0",
+    "livekit-client": "^2.8.0",
     "llamaindex": "^0.8.31",
     "lucide-react": "^0.344.0",
     "next": "14.1.0",
     "next-themes": "^0.2.1",
+    "node-loader": "^2.1.0",
     "nodemailer": "^6.9.11",
     "openai": "^4.28.0",
     "react": "^18.2.0",
@@ -67,6 +72,7 @@
     "sonner": "^1.4.3",
     "tailwind-merge": "^2.2.1",
     "tailwindcss-animate": "^1.0.7",
+    "url-loader": "^4.1.1",
     "vaul": "^0.9.0",
     "zod": "^3.22.4"
   },
@@ -87,9 +93,7 @@
     "typescript": "^5.3.3"
   },
   "resolutions": {},
-  
   "canvas": {
-  "build_from_source": true
-}
-
+    "build_from_source": true
+  }
 }

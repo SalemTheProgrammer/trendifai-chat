@@ -35,14 +35,15 @@ export async function getMessages(userId: string) {
       .from('messages')
       .select('*')
       .eq('user_id', userId)
-      .order('created_at', { ascending: true });
+      .neq('role', 'system')
+      .order('created_at', { ascending: true })
 
     if (error) {
       console.error('Error fetching messages:', error);
       throw error;
     }
 
-    return data || [];
+    return (data || []).filter(msg => msg.role !== 'system');
   } catch (error) {
     console.error('Error in getMessages:', error);
     return [];

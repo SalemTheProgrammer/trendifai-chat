@@ -1,17 +1,26 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { motion } from 'framer-motion';
 import { Lock, Mail } from 'lucide-react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/providers/AuthProvider';
 
 export function Login() {
   const router = useRouter();
+  const { session } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (session) {
+      router.push('/dashboard');
+    }
+  }, [session, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,11 +33,18 @@ export function Login() {
       });
 
       if (error) throw error;
-      
-      toast.success('Connexion réussie!');
-      router.push('/dashboard');
+
+      if (data.session) {
+        toast.success('Connexion réussie!');
+        // AuthProvider will handle the redirect
+      }
     } catch (error: any) {
-      toast.error(error.message || 'Erreur de connexion');
+      console.error('Login error:', error);
+      toast.error(
+        error.message === 'Invalid login credentials'
+          ? 'Email ou mot de passe incorrect'
+          : error.message || 'Erreur de connexion'
+      );
     } finally {
       setLoading(false);
     }
@@ -45,7 +61,11 @@ export function Login() {
           <h2 className="text-center text-3xl font-bold text-blue-200">
             Connexion à votre compte
           </h2>
+          <p className="mt-2 text-center text-sm text-blue-400">
+            Accédez à votre tableau de bord
+          </p>
         </div>
+
         <form className="mt-8 space-y-6" onSubmit={handleLogin}>
           <div className="rounded-md shadow-sm space-y-4">
             <div className="relative">
@@ -59,6 +79,7 @@ export function Login() {
                   bg-blue-950/20 placeholder-blue-400 text-blue-200 rounded-xl focus:outline-none 
                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Adresse email"
+                disabled={loading}
               />
             </div>
             <div className="relative">
@@ -72,6 +93,7 @@ export function Login() {
                   bg-blue-950/20 placeholder-blue-400 text-blue-200 rounded-xl focus:outline-none 
                   focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 placeholder="Mot de passe"
+                disabled={loading}
               />
             </div>
           </div>
@@ -79,11 +101,11 @@ export function Login() {
           <motion.button
             whileTap={{ scale: 0.98 }}
             type="submit"
-            disabled={loading}
+            disabled={loading || !email || !password}
             className="group relative w-full flex justify-center py-3 px-4 border border-transparent 
               rounded-xl text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-500 
               hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 
-              transition-all duration-200"
+              disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
           >
             {loading ? 'Connexion...' : 'Se connecter'}
           </motion.button>

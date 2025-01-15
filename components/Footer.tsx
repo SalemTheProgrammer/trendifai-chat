@@ -1,9 +1,13 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Facebook, Twitter, Linkedin, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import { Facebook, Twitter, Linkedin, Instagram, Mail, MapPin, Phone, Bot } from "lucide-react";
+import { useState } from "react";
+import { ChatModal } from "./ChatModal";
 
 export function Footer() {
+  const [showChat, setShowChat] = useState(false);
+
   return (
     <footer className="py-12 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -31,13 +35,16 @@ export function Footer() {
           <div>
             <h3 className="text-xl font-bold text-blue-200 mb-4">Liens Rapides</h3>
             <ul className="space-y-2">
-              {['Solutions', 'Services', 'À Propos', 'Contact'].map((item) => (
+              {['Solutions', 'Services', 'À Propos'].map((item) => (
                 <li key={item}>
                   <button className="text-blue-400/80 hover:text-blue-400">
                     {item}
                   </button>
                 </li>
               ))}
+              <li>
+                
+              </li>
             </ul>
           </div>
 
@@ -45,16 +52,13 @@ export function Footer() {
           <div>
             <h3 className="text-xl font-bold text-blue-200 mb-4">Contact</h3>
             <ul className="space-y-3">
-              {[
-                { icon: Mail, text: 'contact@agentia.ai' },
-                { icon: Phone, text: '+33 1 23 45 67 89' },
-                { icon: MapPin, text: 'Paris, France' }
-              ].map((item, index) => (
-                <li key={index} className="flex items-center space-x-2">
-                  <item.icon className="w-4 h-4 text-blue-400" />
-                  <span className="text-blue-400/80">{item.text}</span>
-                </li>
-              ))}
+            <button 
+                  onClick={() => setShowChat(true)}
+                  className="flex items-center gap-2 text-blue-400/80 hover:text-blue-400"
+                >
+                  <Bot className="w-4 h-4" />
+                  <span>Contactez-nous</span>
+                </button>
             </ul>
           </div>
 
@@ -91,6 +95,8 @@ export function Footer() {
           </p>
         </div>
       </div>
+
+      <ChatModal isOpen={showChat} onClose={() => setShowChat(false)} />
     </footer>
   );
 }
