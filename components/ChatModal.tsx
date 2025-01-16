@@ -22,28 +22,46 @@ const RobotIcon = () => (
 );
 
 export function ChatModal({ isOpen, onClose }: ChatModalProps) {
+  // Initialize both context and messages from localStorage
+  const initialContext = typeof window !== 'undefined' ? 
+    JSON.parse(localStorage.getItem('agentia-chat-context') || 'null') : null;
+  
+  const initialMessages = typeof window !== 'undefined' ? 
+    JSON.parse(localStorage.getItem('agentia-chat-messages') || '[]') : [];
+
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState<any[]>([]);
+  const [messages, setMessages] = useState<any[]>(initialMessages);
   const [loading, setLoading] = useState(false);
-  const [context, setContext] = useState<{name?: string, email?: string} | null>(null);
+  const [context, setContext] = useState(initialContext);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Load context from localStorage on mount
+  // Initialize messages ONLY if there are no saved messages
   useEffect(() => {
-    const savedContext = localStorage.getItem('agentia-chat-context');
-    if (savedContext) {
-      setContext(JSON.parse(savedContext));
-      setMessages([{
+    if (isOpen && messages.length === 0) {
+      const initialMessage = {
         role: 'assistant',
-        content: `Rebonjour! Comment puis-je vous aider aujourd'hui?`
-      }]);
-    } else {
-      setMessages([{
-        role: 'assistant',
-        content: 'Bonjour! Pour mieux vous aider, pourriez-vous me donner votre nom et email?'
-      }]);
+        content: context?.name 
+          ? `Rebonjour ${context.name}! Comment puis-je vous aider aujourd'hui?`
+          : 'Bonjour! Pour vous aider, j\'ai besoin de votre nom et email.'
+      };
+      setMessages([initialMessage]);
+      localStorage.setItem('agentia-chat-messages', JSON.stringify([initialMessage]));
     }
-  }, []);
+  }, [isOpen, context?.name, messages.length]);
+
+  // Save messages whenever they change
+  useEffect(() => {
+    if (messages.length > 0) {
+      localStorage.setItem('agentia-chat-messages', JSON.stringify(messages));
+    }
+  }, [messages]);
+
+  // Save context whenever it changes
+  useEffect(() => {
+    if (context) {
+      localStorage.setItem('agentia-chat-context', JSON.stringify(context));
+    }
+  }, [context]);
 
   // Scroll to bottom when messages change
   const scrollToBottom = () => {
@@ -70,11 +88,7 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
     e.preventDefault();
     if (!message.trim() || loading) return;
 
-    const userMessage = {
-      content: message,
-      role: 'user'
-    };
-
+    const userMessage = { content: message, role: 'user' };
     setMessage('');
     setMessages(prev => [...prev, userMessage]);
     setLoading(true);
@@ -85,22 +99,27 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           message: userMessage.content,
-          context: context
+          context: context,
+          history: messages // Send entire conversation history
         }),
       });
 
       const data = await response.json();
       
-      if (data.contactInfo?.name || data.contactInfo?.email) {
+      if (data.contactInfo?.name && data.contactInfo?.email) {
         const newContext = {
-          name: data.contactInfo.name || context?.name,
-          email: data.contactInfo.email || context?.email
+          name: data.contactInfo.name,
+          email: data.contactInfo.email
         };
         setContext(newContext);
-        localStorage.setItem('agentia-chat-context', JSON.stringify(newContext));
       }
 
-      setMessages(prev => [...prev, { role: 'assistant', content: data.response }]);
+      const assistantMessage = {
+        role: 'assistant',
+        content: data.response
+      };
+
+      setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
       console.error('Chat error:', error);
       setMessages(prev => [...prev, {
