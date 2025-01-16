@@ -1,19 +1,25 @@
 import { NextResponse } from 'next/server';
 import { handleEmail } from '@/lib/emailAgent';
 
+const AGENTIA_EMAIL = "trendifai@gmail.com";
+
 export async function POST(req: Request) {
   try {
-    const body = await req.json();
-    const { email } = body;
+    const { name, email, reason } = await req.json();
 
-    if (!email) {
+    if (!email || !name) {
       return NextResponse.json(
-        { error: 'Email content is required' },
+        { error: 'Name and email are required' },
         { status: 400 }
       );
     }
 
-    const result = await handleEmail(email);
+    const result = await handleEmail(
+      name,
+      email,
+      AGENTIA_EMAIL,
+      reason || "Demande de contact général"
+    );
 
     if (!result.success) {
       return NextResponse.json(

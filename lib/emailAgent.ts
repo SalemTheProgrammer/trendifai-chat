@@ -54,4 +54,3 @@ export async function handleEmail({ to, subject, content, history = [] }: EmailR
     };
   }
 }
-

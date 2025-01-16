@@ -2,13 +2,12 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { Send, Loader2, Mic, MicOff } from 'lucide-react';
-import { Agent } from './Sidebar';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/providers/AuthProvider';
 import { useVoiceChat } from '@/hooks/useVoiceChat';
 
 interface AgentChatProps {
-  agent: Agent;
+  agent: any;
 }
 
 // Assistant (Robot) Icon Component

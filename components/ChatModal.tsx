@@ -23,13 +23,27 @@ const RobotIcon = () => (
 
 export function ChatModal({ isOpen, onClose }: ChatModalProps) {
   const [message, setMessage] = useState('');
-  const [messages, setMessages] = useState([{
-    role: 'assistant',
-    content: 'Bonjour! Je suis l\'assistant virtuel d\'Agentia. Comment puis-je vous aider aujourd\'hui?'
-  }]);
+  const [messages, setMessages] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [context, setContext] = useState<ContactInfo | null>(null);
+  const [context, setContext] = useState<{name?: string, email?: string} | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Load context from localStorage on mount
+  useEffect(() => {
+    const savedContext = localStorage.getItem('agentia-chat-context');
+    if (savedContext) {
+      setContext(JSON.parse(savedContext));
+      setMessages([{
+        role: 'assistant',
+        content: `Rebonjour! Comment puis-je vous aider aujourd'hui?`
+      }]);
+    } else {
+      setMessages([{
+        role: 'assistant',
+        content: 'Bonjour! Pour mieux vous aider, pourriez-vous me donner votre nom et email?'
+      }]);
+    }
+  }, []);
 
   // Scroll to bottom when messages change
   const scrollToBottom = () => {
@@ -39,14 +53,6 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
-  // Load context from localStorage on mount
-  useEffect(() => {
-    const savedContext = localStorage.getItem('agentia-chat-context');
-    if (savedContext) {
-      setContext(JSON.parse(savedContext));
-    }
-  }, []);
 
   // Handle mobile viewport height adjustments
   useEffect(() => {
@@ -64,9 +70,13 @@ export function ChatModal({ isOpen, onClose }: ChatModalProps) {
     e.preventDefault();
     if (!message.trim() || loading) return;
 
-    const userMessage = { role: 'user', content: message.trim() };
-    setMessages(prev => [...prev, userMessage]);
+    const userMessage = {
+      content: message,
+      role: 'user'
+    };
+
     setMessage('');
+    setMessages(prev => [...prev, userMessage]);
     setLoading(true);
 
     try {

@@ -11,87 +11,69 @@ const AGENTIA_EMAIL = "trendifai@gmail.com";
 export async function POST(request: Request) {
   try {
     const { message, context } = await request.json();
+    
+    const systemPrompt = context ? 
+      `Tu es l'assistant d'Agentia. L'utilisateur ${context.name} est déjà connu.
+      - Aide avec les questions sur l'IA et la prise de contact
+      - Pour les sujets hors IA/contact, suggère ChatGPT avec humour
+      - Reste bref` 
+      : 
+      `Tu es l'assistant d'Agentia. IMPORTANT:
+      - Si quelqu'un veut contacter Agentia, demande IMMÉDIATEMENT son nom et email
+      - Dès que tu as l'email, vérifie-le: "Est-ce bien votre email: [email]?"
+      - Si confirmé, utilise la fonction send_emails
+      - Pour les sujets hors IA/contact, suggère ChatGPT
+      - Sois direct et efficace`;
 
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
-        {
-          role: "system",
-          content: `Tu es l'assistant d'Agentia. Sois bref et efficace.
-CONTEXTE: ${context ? `L'utilisateur s'appelle ${context.name} (${context.email})` : 'Nouveau utilisateur'}
-
-OBJECTIF: Collecter nom, email et raison du contact.`
-        },
-        {
-          role: "user",
-          content: message
-        }
+        { role: "system", content: systemPrompt },
+        { role: "user", content: message }
       ],
       tools: [{
         type: "function",
         function: {
           name: "send_emails",
-          description: "Send welcome and notification emails",
+          description: "Send welcome email when contact info is collected",
           parameters: {
             type: "object",
             properties: {
               name: { type: "string" },
-              email: { type: "string" },
-              reason: { type: "string" }
+              email: { type: "string" }
             },
-            required: ["name", "email", "reason"],
-            additionalProperties: false
-          },
-          strict: true
+            required: ["name", "email"]
+          }
         }
-      }],
-      temperature: 0.7,
-      max_tokens: 150,
+      }]
     });
 
     const aiResponse = completion.choices[0].message;
     
-    // Check if the model wants to send emails
-    if (aiResponse.tool_calls) {
-      const toolCall = aiResponse.tool_calls[0];
-      const args = JSON.parse(toolCall.function.arguments);
-
-      // Send notification to Agentia
-      await handleEmail({
-        to: AGENTIA_EMAIL,
-        subject: "Nouveau prospect - Assistant Agentia",
-        content: `Nouveau prospect:
-Nom: ${args.name}
-Email: ${args.email}
-Raison: ${args.reason}`,
-        history: []
-      });
-
-      // Send welcome email to user
+    if (aiResponse.tool_calls?.[0]) {
+      const args = JSON.parse(aiResponse.tool_calls[0].function.arguments);
+      
+      // Send welcome email
       await handleEmail({
         to: args.email,
         subject: "Bienvenue chez Agentia",
-        content: `Bonjour ${args.name},
+        content: `Bonjour ${args.name},\n\nMerci de votre intérêt pour nos solutions d'IA. Notre équipe vous contactera très prochainement.\n\nL'équipe Agentia`,
+      });
 
-Merci de votre intérêt pour Agentia. Notre équipe vous contactera très prochainement concernant votre demande: "${args.reason}"
-
-Cordialement,
-L'équipe Agentia`,
-        history: []
+      // Notify Agentia
+      await handleEmail({
+        to: AGENTIA_EMAIL,
+        subject: "Nouveau Contact",
+        content: `Nouveau prospect:\nNom: ${args.name}\nEmail: ${args.email}`,
       });
 
       return NextResponse.json({ 
-        response: `Merci ${args.name}! J'ai transmis vos informations à notre équipe. Vous recevrez bientôt un email de confirmation.`,
-        contactInfo: {
-          name: args.name,
-          email: args.email
-        }
+        response: `Parfait ${args.name}! Notre équipe vous contactera bientôt.`,
+        contactInfo: { name: args.name, email: args.email }
       });
     }
 
-    return NextResponse.json({ 
-      response: aiResponse.content
-    });
+    return NextResponse.json({ response: aiResponse.content });
 
   } catch (error) {
     console.error('Chat error:', error);
