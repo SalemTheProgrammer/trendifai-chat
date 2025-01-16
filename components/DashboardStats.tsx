@@ -6,11 +6,10 @@ import {
   MessageSquare, Users, Clock, Brain,
   ArrowRight, Sparkles, Search
 } from 'lucide-react';
-import { Agent } from './Sidebar';
 
 interface DashboardStatsProps {
   user: User | null;
-  onAgentSelect: (agent: Agent) => void;
+  onAgentSelect: (agent: any) => void;
 }
 
 export function DashboardStats({ user, onAgentSelect }: DashboardStatsProps) {
